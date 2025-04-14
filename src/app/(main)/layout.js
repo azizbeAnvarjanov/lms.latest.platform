@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/Navbar";
 import { StudentProvider } from "../context/StudentContext";
-
+import NotificationPermission from "../NotificationPermission";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
       >
         <StudentProvider>
           <Navbar />
+          <NotificationPermission />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {children}
           </main>

@@ -6,6 +6,7 @@ import {
   LogOutIcon,
   PinIcon,
   UserPenIcon,
+  UserRoundCog,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -51,8 +52,8 @@ export default function AvatarNavbar({ user, student }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 1</span>
+            <UserRoundCog size={16} className="opacity-60" aria-hidden="true" />
+            <span>Mening profilim</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Layers2Icon size={16} className="opacity-60" aria-hidden="true" />
