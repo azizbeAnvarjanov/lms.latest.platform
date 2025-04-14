@@ -5,33 +5,37 @@ import { useEffect } from 'react';
 export default function TestNotification() {
   useEffect(() => {
     const notify = () => {
-      if (!("Notification" in window)) {
-        console.log("Browser does not support notifications.");
+      if (typeof window === 'undefined' || !('Notification' in window)) {
+        console.log('Notification not supported in this browser.');
         return;
       }
 
-      if (Notification.permission === "granted") {
-        new Notification("🔔 Test Notification", {
-          body: "Bu test notificatsiya. Har 1 minutda yuboriladi.",
-        });
-      } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            new Notification("🔔 Test Notification", {
-              body: "Bu test notificatsiya. Har 1 minutda yuboriladi.",
-            });
+      if (Notification.permission === 'granted') {
+        try {
+          new Notification('🔔 Test Notification', {
+            body: 'Bu test notificatsiya. Har 1 minutda yuboriladi.',
+          });
+        } catch (error) {
+          console.error('Notification error:', error);
+        }
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            try {
+              new Notification('🔔 Test Notification', {
+                body: 'Bu test notificatsiya. Har 1 minutda yuboriladi.',
+              });
+            } catch (error) {
+              console.error('Notification error:', error);
+            }
           }
         });
       }
     };
 
-    // Dastlab darhol chaqiriladi
     notify();
-
-    // Har 60 soniyada chaqiriladi
     const interval = setInterval(notify, 60000);
 
-    // Component unmount bo‘lsa interval to‘xtatiladi
     return () => clearInterval(interval);
   }, []);
 
