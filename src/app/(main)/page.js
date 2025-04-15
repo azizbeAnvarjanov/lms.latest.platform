@@ -3,7 +3,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStudent } from "../context/StudentContext";
 
-import TestNotification from "@/components/TestNotification";
 
 export default function PrivatePage() {
   const { user, student, loading } = useStudent();
@@ -13,7 +12,7 @@ export default function PrivatePage() {
 
   return (
     <p>
-      Hello {student.fio} <TestNotification />
+      Hello {student.fio}
     </p>
   );
 }

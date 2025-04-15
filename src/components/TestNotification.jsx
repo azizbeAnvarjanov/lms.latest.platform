@@ -34,7 +34,7 @@ export default function TestNotification() {
     };
 
     notify();
-    const interval = setInterval(notify, 60000);
+    const interval = setInterval(notify, 600000);
 
     return () => clearInterval(interval);
   }, []);

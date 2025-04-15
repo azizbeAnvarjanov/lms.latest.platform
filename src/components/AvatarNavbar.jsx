@@ -21,23 +21,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/app/(login)/login/actions";
+import Link from "next/link";
+
+import getInitials from "@/app/hooks/getInitials";
 
 export default function AvatarNavbar({ user, student }) {
-  console.log(user.email);
-
+  const av = getInitials(student.fio);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
-          <Avatar>
-            <AvatarImage src="./avatar.jpg" alt="Profile image" />
-            <AvatarFallback>KK</AvatarFallback>
+          <Avatar className="flex items-center justify-center bg-muted border-2 text-sm">
+            <div className="">{av}</div>
           </Avatar>
-          <ChevronDownIcon
-            size={16}
-            className="opacity-60"
-            aria-hidden="true"
-          />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-w-64">
@@ -51,35 +47,39 @@ export default function AvatarNavbar({ user, student }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <UserRoundCog size={16} className="opacity-60" aria-hidden="true" />
-            <span>Mening profilim</span>
+          <DropdownMenuItem asChild>
+            <Link href="/profile" className="flex items-center">
+              <UserRoundCog
+                size={16}
+                className="opacity-60"
+                aria-hidden="true"
+              />
+              <span>Mening profilim</span>
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Layers2Icon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 2</span>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard" className="flex items-center">
+              <Layers2Icon
+                size={16}
+                className="opacity-60"
+                aria-hidden="true"
+              />
+              <span>Dashboard</span>
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 3</span>
+          <DropdownMenuItem asChild>
+            <Link href="/courses" className="flex items-center">
+              <BookOpenIcon
+                size={16}
+                className="opacity-60"
+                aria-hidden="true"
+              />
+              <span>Courses</span>
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <PinIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 4</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 5</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={logout}
-          className="cursor-pointer"
-        >
+        <DropdownMenuItem onClick={logout} className="cursor-pointer">
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>Logout</span>
         </DropdownMenuItem>

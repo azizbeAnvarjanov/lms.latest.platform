@@ -8,6 +8,8 @@ const StudentContext = createContext(null);
 export function StudentProvider({ children }) {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [courses, setCourses] = useState([]);
+
   const [user, setUser] = useState(true);
   const supabase = createClient();
 
@@ -42,8 +44,28 @@ export function StudentProvider({ children }) {
     fetchStudent();
   }, []);
 
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select("id, course_id, banner_url, name")
+        .order("created_at", { ascending: true });
+
+      if (!error) {
+        setCourses(data);
+      } else {
+        console.error("Error fetching courses:", error.message);
+      }
+
+      setLoading(false);
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
-    <StudentContext.Provider value={{ user, student, loading }}>
+    <StudentContext.Provider value={{ user, student, loading, courses }}>
       {children}
     </StudentContext.Provider>
   );

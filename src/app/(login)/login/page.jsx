@@ -2,12 +2,27 @@
 import { Input } from "@/components/ui/input";
 import { login, signup } from "./actions";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoaderCircleIcon } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
 
 export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+        redirect('/')
+      }
+    }
+
+    checkUser()
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
