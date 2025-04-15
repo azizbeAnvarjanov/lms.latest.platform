@@ -4,6 +4,7 @@ import {
   ChevronDownIcon,
   FileText,
   Layers2Icon,
+  LayoutDashboard,
   LogOutIcon,
   PinIcon,
   UserPenIcon,
@@ -49,13 +50,13 @@ export default function AvatarNavbar({ user, student }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/profile" className="flex items-center">
-              <UserRoundCog
+            <Link href="/" className="flex items-center">
+              <LayoutDashboard
                 size={16}
                 className="opacity-60"
                 aria-hidden="true"
               />
-              <span>Mening profilim</span>
+              <span>Asosiy sahifa</span>
             </Link>
           </DropdownMenuItem>
 
