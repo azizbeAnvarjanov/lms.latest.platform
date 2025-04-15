@@ -70,7 +70,7 @@ export default function AvatarNavbar({ user, student }) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/courses" className="flex items-center">
+            <Link href="/applications" className="flex items-center">
               <FileText size={16} className="opacity-60" aria-hidden="true" />
               <span>Ariza topshirish</span>
             </Link>
