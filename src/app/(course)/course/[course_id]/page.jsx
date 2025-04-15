@@ -4,9 +4,11 @@ import { useParams } from "next/navigation";
 import ReactPlayer from "react-player";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, TimerReset } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DocViewerPage from "@/components/DocViewerPage";
+import PptViewerTabs from "@/components/PptViewer";
 
 const CoursePage = () => {
   const { course_id } = useParams();
@@ -51,7 +53,7 @@ const CoursePage = () => {
       if (!selectedTopic) return;
       const { data, error } = await supabase
         .from("tests")
-        .select("id")
+        .select("id, name")
         .eq("topic_id", selectedTopic.topic_id)
         .single();
 
@@ -73,12 +75,12 @@ const CoursePage = () => {
   );
 
   return (
-    <div className="flex flex-col md:flex-row bg-white">
+    <div className="player-thumb flex flex-col md:flex-row bg-white overflow-y-scroll scrollbar-hide max-h-screen">
       {/* Chap tomon */}
-      <div className="flex-1 border-r">
+      <div className="flex-1 border-r md:w-[75%] overflow-y-scroll scrollbar-hide max-h-screen">
         <div className="flex items-center justify-between md:justify-start md:gap-3 p-3">
           <Link
-            href={`/`}
+            href={`/courses`}
             className="bg-white border flex items-center justify-center hover:bg-muted w-[40px] h-[40px] rounded-xl"
           >
             <ChevronLeft />
@@ -116,7 +118,7 @@ const CoursePage = () => {
                 <TabsTrigger value="test">Test</TabsTrigger>
               </TabsList>
               <TabsContent value="pdf">
-                <div className="">
+                <div className="min-h-screen">
                   {selectedTopic.notes && selectedTopic.notes.length > 0 ? (
                     selectedTopic.notes.map((note, i) => (
                       <Link
@@ -132,23 +134,18 @@ const CoursePage = () => {
                   ) : (
                     <p className="text-gray-500">Note mavjud emas</p>
                   )}
+                  {selectedTopic.notes && selectedTopic.notes.length > 0 ? (
+                    <DocViewerPage docsarr={selectedTopic?.notes} />
+                  ) : (
+                    <p className="text-gray-500">Note mavjud emas</p>
+                  )}
                 </div>
               </TabsContent>
               <TabsContent value="ppt">
                 {/* PPTs ko'rsatish */}
                 <div className="">
                   {selectedTopic.ppts && selectedTopic.ppts.length > 0 ? (
-                    selectedTopic.ppts.map((ppt, i) => (
-                      <a
-                        key={i}
-                        href={ppt.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block text-blue-600 underline"
-                      >
-                        {ppt.name || `PPT ${i + 1}`}
-                      </a>
-                    ))
+                    <PptViewerTabs notes={selectedTopic?.ppts} />
                   ) : (
                     <p className="text-gray-500">PPT mavjud emas</p>
                   )}
@@ -156,16 +153,24 @@ const CoursePage = () => {
               </TabsContent>
               <TabsContent value="test">
                 {/* Test link */}
-                {test ? (
-                  <Link
-                    href={`/test/${test.id}`}
-                    className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg m-4 "
-                  >
-                    Testni boshlash
-                  </Link>
-                ) : (
-                  <p className="text-gray-500">Test mavjud emas</p>
-                )}
+                <div className="min-h-screen">
+                  {test ? (
+                    <div className="p-4 rounded-lg border w-full flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <TimerReset size={35} />
+                        <p>{test.name}</p>
+                      </div>
+                      <Link
+                        href={`/course/${course_id}/${test.id}`}
+                        className="bg-blue-400 py-1 px-4 rounded-full text-white"
+                      >
+                        Testni boshlash
+                      </Link>
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">Test mavjud emas</p>
+                  )}
+                </div>
               </TabsContent>
             </Tabs>
           </div>
@@ -173,7 +178,7 @@ const CoursePage = () => {
       </div>
 
       {/* O'ng tomon: Mavzular listi */}
-      <div className="w-full md:w-1/4">
+      <div className="w-full md:w-[25%] border-l overflow-y-scroll scrollbar-hide max-h-screen">
         <div className="p-2">
           <Input
             type="text"
@@ -185,18 +190,19 @@ const CoursePage = () => {
         </div>
         <div className="">
           {filteredTopics.map((topic) => (
-            <button
+            <div
               key={topic.id}
-              className={`w-full text-left px-4 py-2 border-t cursor-pointer line-clamp-1 ${
+              className={`w-full text-left px-4 py-2 border-t cursor-pointer line-clamp-1 overflow-hidden ${
                 selectedTopic?.id === topic.id
                   ? "bg-green-400 text-white"
-                  : "bg-white text-black hover:bg-muted"
+                  : "text-black hover:bg-muted"
               }`}
               onClick={() => setSelectedTopic(topic)}
             >
-              <span className="font-bold mr-2">{topic.order}.</span>
-              {topic.name}
-            </button>
+              <p className="line-clamp-1">
+                {topic.order}. {topic.name}
+              </p>
+            </div>
           ))}
         </div>
       </div>
