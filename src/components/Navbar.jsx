@@ -14,7 +14,7 @@ export default function Navbar() {
   if (!student) return <div>No student data</div>;
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white shadow-sm fixed left-0 top-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="w-full border-gray-300 h-[7vh] flex items-center px-2">

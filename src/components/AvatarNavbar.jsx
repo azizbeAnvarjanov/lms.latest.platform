@@ -2,6 +2,7 @@ import {
   BoltIcon,
   BookOpenIcon,
   ChevronDownIcon,
+  FileText,
   Layers2Icon,
   LogOutIcon,
   PinIcon,
@@ -57,16 +58,7 @@ export default function AvatarNavbar({ user, student }) {
               <span>Mening profilim</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/dashboard" className="flex items-center">
-              <Layers2Icon
-                size={16}
-                className="opacity-60"
-                aria-hidden="true"
-              />
-              <span>Dashboard</span>
-            </Link>
-          </DropdownMenuItem>
+
           <DropdownMenuItem asChild>
             <Link href="/courses" className="flex items-center">
               <BookOpenIcon
@@ -74,14 +66,20 @@ export default function AvatarNavbar({ user, student }) {
                 className="opacity-60"
                 aria-hidden="true"
               />
-              <span>Courses</span>
+              <span>Fan baza</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/courses" className="flex items-center">
+              <FileText size={16} className="opacity-60" aria-hidden="true" />
+              <span>Ariza topshirish</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout} className="cursor-pointer">
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
-          <span>Logout</span>
+          <span>Tizimdan chiqish</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DocViewerPage from "@/components/DocViewerPage";
 import PptViewerTabs from "@/components/PptViewer";
+import { Skeleton } from "@/components/ui/skeleton";
+import TopicsSheet from "@/components/TopicSheet";
 
 const CoursePage = () => {
   const { course_id } = useParams();
@@ -67,7 +69,41 @@ const CoursePage = () => {
     fetchTest();
   }, [selectedTopic]);
 
-  if (loading) return <div>Yuklanmoqda...</div>;
+  if (loading)
+    return (
+      <div className="flex flex-col md:flex-row items-start max-h-screen overflow-hidden">
+        <div className="player-thumb w-full md:w-[75%] overflow-y-scroll scrollbar-hide max-h-screen">
+          <div className="flex items-center justify-between md:justify-start md:gap-3 p-3">
+            <Skeleton className="w-[40px] h-[40px] rounded-xl" />
+            <Skeleton className="w-[140px] h-[15px] rounded-xl" />
+            <Skeleton className="md:hidden w-[40px] h-[40px] rounded-xl " />
+          </div>
+          <div className="w-full h-[300px] md:h-[700px] overflow-hidden">
+            <Skeleton className="w-full h-full" />
+          </div>
+          <div className="p-3 space-y-3">
+            <Skeleton className="w-full mx-auto h-[100px] rounded-xl" />
+            <Skeleton className="w-full mx-auto h-[100px] rounded-xl" />
+            <Skeleton className="w-full mx-auto h-[100px] rounded-xl" />
+          </div>
+        </div>
+        <div className="w-full hidden md:block md:w-[25%] h-[100vh] border-l player-thumb overflow-y-scroll">
+          <div className="flex items-center gap-1 p-3 justify-between">
+            <Skeleton className="w-[140px] h-[15px] rounded-xl" />
+            <Skeleton className="w-[40px] h-[40px] rounded-xl" />
+          </div>
+          <div className="">
+            <Skeleton className="w-full h-[50px] border border-white rounded-none" />
+            <Skeleton className="w-full h-[50px] border border-white rounded-none" />
+            <Skeleton className="w-full h-[50px] border border-white rounded-none" />
+            <Skeleton className="w-full h-[50px] border border-white rounded-none" />
+            <Skeleton className="w-full h-[50px] border border-white rounded-none" />
+            <Skeleton className="w-full h-[50px] border border-white rounded-none" />
+            <Skeleton className="w-full h-[50px] border border-white rounded-none" />
+          </div>
+        </div>
+      </div>
+    );
   if (!course) return <div>Kurs topilmadi</div>;
 
   const filteredTopics = course.topics.filter((topic) =>
@@ -86,6 +122,11 @@ const CoursePage = () => {
             <ChevronLeft />
           </Link>
           <h1 className="font-bold text-[15px] md:text-2xl">{course?.name}</h1>
+          <TopicsSheet
+            topics={filteredTopics}
+            selectedTopic={selectedTopic}
+            setSelectedTopic={setSelectedTopic}
+          />
         </div>
 
         {selectedTopic && (
@@ -120,21 +161,6 @@ const CoursePage = () => {
               <TabsContent value="pdf">
                 <div className="min-h-screen">
                   {selectedTopic.notes && selectedTopic.notes.length > 0 ? (
-                    selectedTopic.notes.map((note, i) => (
-                      <Link
-                        key={i}
-                        href={note.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block text-blue-600 underline"
-                      >
-                        {note.name || `Note ${i + 1}`}
-                      </Link>
-                    ))
-                  ) : (
-                    <p className="text-gray-500">Note mavjud emas</p>
-                  )}
-                  {selectedTopic.notes && selectedTopic.notes.length > 0 ? (
                     <DocViewerPage docsarr={selectedTopic?.notes} />
                   ) : (
                     <p className="text-gray-500">Note mavjud emas</p>
@@ -153,22 +179,23 @@ const CoursePage = () => {
               </TabsContent>
               <TabsContent value="test">
                 {/* Test link */}
-                <div className="min-h-screen">
+                <div className="min-h-screen p-4">
                   {test ? (
-                    <div className="p-4 rounded-lg border w-full flex items-center justify-between">
+                    <div className="w-full p-4 rounded-lg border shadow-sm bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
-                        <TimerReset size={35} />
-                        <p>{test.name}</p>
+                        <p className="text-lg font-medium">{test.name}</p>
                       </div>
                       <Link
                         href={`/course/${course_id}/${test.id}`}
-                        className="bg-blue-400 py-1 px-4 rounded-full text-white"
+                        className="bg-blue-500 hover:bg-blue-600 transition-colors py-2 px-5 rounded-full text-white text-sm font-medium"
                       >
                         Testni boshlash
                       </Link>
                     </div>
                   ) : (
-                    <p className="text-gray-500">Test mavjud emas</p>
+                    <p className="text-gray-500 text-center mt-8 text-lg">
+                      Test mavjud emas
+                    </p>
                   )}
                 </div>
               </TabsContent>
@@ -178,7 +205,7 @@ const CoursePage = () => {
       </div>
 
       {/* O'ng tomon: Mavzular listi */}
-      <div className="w-full md:w-[25%] border-l overflow-y-scroll scrollbar-hide max-h-screen">
+      <div className="w-full hidden md:block md:w-[25%] h-[100vh] border-l overflow-y-scroll">
         <div className="p-2">
           <Input
             type="text"
