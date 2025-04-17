@@ -13,7 +13,7 @@ const AllCourses = () => {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <Input
-          placeholder="Search"
+          placeholder="Qidirish"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full sm:w-[300px] md:w-[400px] lg:w-[500px] bg-white"

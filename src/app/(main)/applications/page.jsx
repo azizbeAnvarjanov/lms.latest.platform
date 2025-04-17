@@ -33,22 +33,20 @@ const ApplicationPage = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
 
   useEffect(() => {
-    if (user && student?.id) {
-      fetchApplications(student.id);
-    }
-  }, [user, student]);
-  
+    fetchApplications();
+  }, []);
 
-  const fetchApplications = async (id) => {
+  const fetchApplications = async () => {
     const { data, error } = await supabase
-      .from("applications")
+      .from("arizalar")
       .select("*")
-      .eq("student_id", id)
       .order("created_at", { ascending: false });
     if (error) {
       console.error(error);
       toast.error("Arizalarni olishda xatolik yuz berdi");
     } else {
+      console.log(data);
+
       setApplications(data);
     }
   };
@@ -60,7 +58,7 @@ const ApplicationPage = () => {
     }
 
     const newApplication = {
-      student_id: student?.id,
+      student_id: user.id,
       student_application: applicationText,
       status: "Yuborildi",
       status_history: [
@@ -79,9 +77,7 @@ const ApplicationPage = () => {
       created_at: new Date().toISOString(),
     };
 
-    const { error } = await supabase
-      .from("applications")
-      .insert([newApplication]);
+    const { error } = await supabase.from("arizalar").insert([newApplication]);
 
     if (error) {
       toast.error("Arizani yuborishda xatolik yuz berdi");
@@ -90,7 +86,7 @@ const ApplicationPage = () => {
       toast.success("Ariza muvaffaqiyatli yuborildi");
       sendToTelegram(student?.fio, applicationText);
       setApplicationText("");
-      fetchApplications(student?.id);
+      fetchApplications();
     }
   };
 
@@ -129,6 +125,7 @@ const ApplicationPage = () => {
       console.error("Telegram xabari yuborilmadi:", error);
     }
   };
+  console.log(user);
 
   return (
     <div>

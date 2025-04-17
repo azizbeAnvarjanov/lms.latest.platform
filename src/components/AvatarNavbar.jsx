@@ -50,6 +50,16 @@ export default function AvatarNavbar({ user, student }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
+            <Link href="/profile" className="flex items-center">
+              <UserRoundCog
+                size={16}
+                className="opacity-60"
+                aria-hidden="true"
+              />
+              <span>Mening profilim</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <Link href="/" className="flex items-center">
               <LayoutDashboard
                 size={16}
