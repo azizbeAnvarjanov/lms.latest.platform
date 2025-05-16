@@ -3,6 +3,7 @@
 import { useStudent } from "@/app/context/StudentContext";
 import getInitials from "@/app/hooks/getInitials";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GraduationCap } from "lucide-react";
 import React from "react";
 
 const ProfilePage = () => {
@@ -13,8 +14,8 @@ const ProfilePage = () => {
 
   return (
     <div className="w-full max-w-xl mx-auto md:px-4">
-      <div className="w-24 h-24 text-2xl font-medium mx-auto my-3 border-2 rounded-full bg-muted grid place-content-center">
-        <p>{av}</p>
+      <div className="w-24 h-24 text-2xl font-medium mx-auto my-3 border-10 rounded-full bg-muted grid place-content-center">
+        <GraduationCap size="40" color="#909090" />
       </div>
       <h1 className="text-center font-medium text-lg sm:text-xl">
         {student.fio}

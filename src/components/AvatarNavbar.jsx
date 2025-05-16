@@ -3,6 +3,7 @@ import {
   BookOpenIcon,
   ChevronDownIcon,
   FileText,
+  GraduationCap,
   Layers2Icon,
   LayoutDashboard,
   LogOutIcon,
@@ -38,8 +39,12 @@ export default function AvatarNavbar({ user, student }) {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-w-64">
-        <DropdownMenuLabel className="flex min-w-0 flex-col">
+      <DropdownMenuContent className="max-w-96">
+        <DropdownMenuLabel className="flex min-w-0 flex-col bg-muted text-center rounded-sm pointer-events-none">
+          <div className="bg-white border-2 w-[50px] h-[50px] rounded-full grid place-content-center text-xl mx-auto my-4">
+            {/* {av} */}
+            <GraduationCap />
+          </div>
           <span className="text-foreground truncate text-sm font-medium">
             {student.fio}
           </span>
