@@ -21,7 +21,7 @@ export function StudentProvider({ children }) {
         } = await supabase.auth.getUser();
 
         if (user) {
-            setUser(user)
+          setUser(user);
           const { data: studentData, error } = await supabase
             .from("talabalar")
             .select("*")
@@ -43,7 +43,6 @@ export function StudentProvider({ children }) {
 
     fetchStudent();
   }, []);
-
 
   useEffect(() => {
     const fetchCourses = async () => {
