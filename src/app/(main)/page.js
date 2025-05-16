@@ -12,7 +12,7 @@ export default function PrivatePage() {
 
   return (
     <p>
-      Hello {student.fio}
+      Hello {student.fio} - azizbek
     </p>
   );
 }
