@@ -2,7 +2,8 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStudent } from "../context/StudentContext";
-
+import { CoursesProvider } from "../context/CoursesProvider";
+import CoursesPageComponent from "@/components/CoursesPageComponent";
 
 export default function PrivatePage() {
   const { user, student, loading } = useStudent();
@@ -11,8 +12,8 @@ export default function PrivatePage() {
   if (!student) return <div>No student data</div>;
 
   return (
-    <p>
-      Hello {student.fio}
-    </p>
+    <CoursesProvider>
+      <CoursesPageComponent />
+    </CoursesProvider>
   );
 }
