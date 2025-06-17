@@ -14,8 +14,9 @@ export function CoursesProvider({ children }) {
   useEffect(() => {
     const fetchCourses = async () => {
       const { data, error } = await supabase
-        .from("courses")
+        .from("courses_duplicate")
         .select("id, course_id, banner_url, name")
+        .eq("status", "TRUE")
         .order("created_at", { ascending: true });
 
       if (!error) {

@@ -26,7 +26,7 @@ const TestPlayingPage = () => {
 
   const fetchTest = async () => {
     const { data, error } = await supabase
-      .from("tests")
+      .from("tests_duplicate")
       .select("questions")
       .eq("id", test_id)
       .single();

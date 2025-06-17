@@ -11,6 +11,7 @@ import DocViewerPage from "@/components/DocViewerPage";
 import PptViewerTabs from "@/components/PptViewer";
 import { Skeleton } from "@/components/ui/skeleton";
 import TopicsSheet from "@/components/TopicSheet";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const CoursePage = () => {
   const { course_id } = useParams();
@@ -20,26 +21,28 @@ const CoursePage = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
+  const [videos, setVideos] = useState([]);
 
   useEffect(() => {
     const fetchCourse = async () => {
       setLoading(true);
       const { data, error } = await supabase
-        .from("courses")
+        .from("courses_duplicate")
         .select(
-          "id, name, banner_url, topics (id, name, description, video_link, topic_id, ppts, notes, order)"
+          "id, name, banner_url, chapters (id, name, description, video_link, chapter_id, ppts, notes, order)"
         )
         .eq("course_id", course_id)
+        .eq("chapters.chapter_status", true)
         .single();
 
       if (error) {
         console.error("Kursni olishda xatolik:", error);
       } else {
         // Order bo'yicha sort
-        const sortedTopics = [...(data.topics || [])].sort(
+        const sortedTopics = [...(data.chapters || [])].sort(
           (a, b) => a.order - b.order
         );
-        setCourse({ ...data, topics: sortedTopics });
+        setCourse({ ...data, chapters: sortedTopics });
         if (sortedTopics.length > 0) {
           setSelectedTopic(sortedTopics[0]);
         }
@@ -53,21 +56,39 @@ const CoursePage = () => {
   useEffect(() => {
     const fetchTest = async () => {
       if (!selectedTopic) return;
-      const { data, error } = await supabase
-        .from("tests")
-        .select("id, name")
-        .eq("topic_id", selectedTopic.topic_id)
-        .single();
+      if (!selectedTopic.chapter_id) return;
 
-      if (error) {
+      const { data, error } = await supabase
+        .from("videos")
+        .select("*")
+        .eq("chapter_id", selectedTopic.chapter_id);
+
+      const { data: test, error: testError } = await supabase
+        .from("tests_duplicate")
+        .select("*")
+        .eq("chapter_id", selectedTopic.chapter_id)
+        .eq("test_status", true);
+
+      if (error || testError) {
+        setVideos(null);
         setTest(null);
       } else {
-        setTest(data);
+        setVideos(data);
+        setTest(test);
       }
     };
 
     fetchTest();
   }, [selectedTopic]);
+
+  console.log(test);
+
+   const getEmbedLink = (link) => {
+     const match = link.match(
+       /(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/
+     );
+     return match ? `https://www.youtube.com/embed/${match[1]}` : "";
+   };
 
   if (loading)
     return (
@@ -106,7 +127,7 @@ const CoursePage = () => {
     );
   if (!course) return <div>Kurs topilmadi</div>;
 
-  const filteredTopics = course.topics.filter((topic) =>
+  const filteredTopics = course.chapters.filter((topic) =>
     topic.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -131,15 +152,29 @@ const CoursePage = () => {
 
         {selectedTopic && (
           <div className="space-y-4">
-            {selectedTopic.video_link && (
-              <div className="aspect-video">
-                <ReactPlayer
-                  url={selectedTopic.video_link}
-                  width="100%"
-                  height="100%"
-                  controls
-                />
-              </div>
+            {videos && videos.length > 0 && (
+              <Carousel className="w-full relative" opts={{ drag: false }}>
+                <CarouselContent>
+                  {videos.map((video) => (
+                    <CarouselItem key={video.id}>
+                      <div className="relative aspect-video overflow-hidden w-full">
+                        <iframe
+                          className="w-[90%] mx-auto h-full"
+                          src={getEmbedLink(video.video_link)}
+                          title={video.name}
+                          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                      <p className="text-center mt-2 font-medium">
+                        {video.name}
+                      </p>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 z-10" />
+                <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 z-10" />
+              </Carousel>
             )}
 
             <div className="px-3">
@@ -179,25 +214,27 @@ const CoursePage = () => {
               </TabsContent>
               <TabsContent value="test">
                 {/* Test link */}
-                <div className="min-h-screen p-4">
+                {/* <div className="min-h-screen p-4">
                   {test ? (
-                    <div className="w-full p-4 rounded-lg border shadow-sm bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <p className="text-lg font-medium">{test.name}</p>
+                    test.map((t, i) => (
+                      <div className="w-full p-4 rounded-lg border shadow-sm bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" key={t.id}>
+                        <div className="flex items-center gap-3">
+                          <p className="text-lg font-medium">{t.name}</p>
+                        </div>
+                        <Link
+                          href={`/course/${course_id}/${t.id}`}
+                          className="bg-blue-500 hover:bg-blue-600 transition-colors py-2 px-5 rounded-full text-white text-sm font-medium"
+                        >
+                          Testni boshlash
+                        </Link>
                       </div>
-                      <Link
-                        href={`/course/${course_id}/${test.id}`}
-                        className="bg-blue-500 hover:bg-blue-600 transition-colors py-2 px-5 rounded-full text-white text-sm font-medium"
-                      >
-                        Testni boshlash
-                      </Link>
-                    </div>
+                    ))
                   ) : (
                     <p className="text-gray-500 text-center mt-8 text-lg">
                       Test mavjud emas
                     </p>
                   )}
-                </div>
+                </div> */}
               </TabsContent>
             </Tabs>
           </div>

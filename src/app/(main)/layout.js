@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
       >
         <StudentProvider>
           <Navbar />
+          {/* <NotificationPermission /> */}
           <main className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 pt-20">
             {children}
           </main>

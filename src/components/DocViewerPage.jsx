@@ -9,7 +9,6 @@ const DocViewer = dynamic(() => import("@cyntler/react-doc-viewer"), {
 });
 
 const DocViewerPage = ({ docsarr }) => {
-  console.log("Received docsarr:", docsarr);
 
   let docs = [];
 
